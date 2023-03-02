@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/j3yzz/mowz/internal/cmd/server"
 	"github.com/j3yzz/mowz/internal/config"
 	"github.com/spf13/cobra"
 	"log"
@@ -12,12 +13,14 @@ const (
 )
 
 func Execute() {
-	config.New()
+	cfg := config.New()
 
 	root := &cobra.Command{
 		Use:   "mowz",
 		Short: "a backend web application.",
 	}
+
+	server.Register(root, cfg)
 
 	if err := root.Execute(); err != nil {
 		log.Println("failed to execute root command")
