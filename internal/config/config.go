@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/j3yzz/mowz/internal/db"
+	"github.com/j3yzz/mowz/internal/http/jwt"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/v2"
@@ -9,7 +10,8 @@ import (
 )
 
 type Config struct {
-	Database db.Config `koanf:"database"`
+	Database db.Config  `koanf:"database"`
+	JWT      jwt.Config `koanf:"jwt"`
 }
 
 func New() Config {

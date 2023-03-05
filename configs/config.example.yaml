@@ -4,3 +4,5 @@ database:
   username: your-username
   password: your-password
   database: your-database-name
+jwt:
+  secret: secret
