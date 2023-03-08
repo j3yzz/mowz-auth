@@ -5,6 +5,7 @@ import (
 	"github.com/j3yzz/mowz/internal/config"
 	"github.com/j3yzz/mowz/internal/db"
 	"github.com/j3yzz/mowz/internal/http/handler"
+	"github.com/j3yzz/mowz/internal/store/user"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
 	"log"
@@ -15,7 +16,7 @@ import (
 )
 
 func main(cfg config.Config) {
-	_, err := db.New(cfg.Database)
+	database, err := db.New(cfg.Database)
 	if err != nil {
 		log.Fatal("database init failed.")
 	}
@@ -23,6 +24,12 @@ func main(cfg config.Config) {
 	app := echo.New()
 
 	handler.Health{}.Register(app.Group(""))
+
+	api := app.Group("/api/v1")
+
+	handler.Register{
+		Store: user.NewMysqlUser(database),
+	}.Register(api)
 
 	if err := app.Start(":8082"); !errors.Is(err, http.ErrServerClosed) {
 		log.Fatal("echo init failed")
