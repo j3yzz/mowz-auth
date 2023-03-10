@@ -8,6 +8,7 @@ import (
 	"github.com/j3yzz/mowz/internal/model"
 	"github.com/j3yzz/mowz/internal/store/user"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -27,10 +28,14 @@ func (r Register) Handle(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rq.Password), 8)
+	if err != nil {
+		panic(err)
+	}
 	u := model.User{
 		Name:     rq.Name,
 		Email:    rq.Email,
-		Password: rq.Password,
+		Password: string(hashedPassword),
 	}
 
 	if err := r.Store.Set(u); err != nil {
