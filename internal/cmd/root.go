@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/j3yzz/mowz/internal/cmd/migrate"
 	"github.com/j3yzz/mowz/internal/cmd/server"
 	"github.com/j3yzz/mowz/internal/config"
 	"github.com/spf13/cobra"
@@ -20,6 +21,7 @@ func Execute() {
 		Short: "a backend web application.",
 	}
 
+	migrate.Register(root, cfg)
 	server.Register(root, cfg)
 
 	if err := root.Execute(); err != nil {
