@@ -5,6 +5,7 @@ import (
 	"github.com/j3yzz/mowz/internal/config"
 	"github.com/j3yzz/mowz/internal/db"
 	"github.com/j3yzz/mowz/internal/http/handler"
+	"github.com/j3yzz/mowz/internal/http/jwt"
 	"github.com/j3yzz/mowz/internal/store/user"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
@@ -30,6 +31,23 @@ func main(cfg config.Config) {
 	handler.Register{
 		Store: user.NewMysqlUser(database),
 	}.Register(api)
+
+	jh := jwt.JWT{
+		Config:    cfg.JWT,
+		UserStore: user.NewMysqlUser(database),
+	}
+
+	handler.Login{
+		Store: user.NewMysqlUser(database),
+		JWT:   jh,
+	}.Register(api)
+
+	authApi := app.Group("api/v1", jh.Middleware())
+
+	handler.Profile{
+		Store: user.NewMysqlUser(database),
+		JWT:   jh,
+	}.Register(authApi)
 
 	if err := app.Start(":8082"); !errors.Is(err, http.ErrServerClosed) {
 		log.Fatal("echo init failed")

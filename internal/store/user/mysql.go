@@ -33,3 +33,9 @@ func (u *MysqlUser) FindByEmail(email string) (model.UserWithId, error) {
 	query := u.DB.Table(Table).Find(&user, "email = ?", email)
 	return user, query.Error
 }
+
+func (u *MysqlUser) FindById(id string) (model.UserWithId, error) {
+	var user model.UserWithId
+	query := u.DB.Table(Table).Find(&user, "id = ?", id)
+	return user, query.Error
+}
