@@ -1,6 +1,9 @@
 # Mowz 🍌 - Authentication Service
 
 ---
+
+Mowz Authentication service is a user authentication and authorization system for Mowz. It provides a secure and efficient way to manage user accounts, passwords, and access to Mowz services.
+
 ## APIs
 Register a new user with JSON request as follows:
 
