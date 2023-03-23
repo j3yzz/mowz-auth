@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: mowz-auth-web
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile
+    ports:
+      - "8082:8082"
+    volumes:
+      - .:/usr/src/app
+    command: air ./cmd/main.go server
+    networks:
+      - mowz-net
+  database:
+    build:
+      context: .
+      dockerfile: deployments/db.dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: 540220.Amir
+      MYSQL_USER: mowz_db
+      MYSQL_PASSWORD: 540220.Amir
+      MYSQL_DATABASE: mowz
+    container_name: mowz-auth-db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mowz-auth-db:/var/lib/mysql
+    networks:
+      - mowz-net
+volumes:
+  mowz-auth-db:
+networks:
+  mowz-net:
+    driver: bridge
