@@ -1,7 +1,9 @@
-FROM golang:alpine
+FROM golang:latest
 
 WORKDIR /usr/src/app
 
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn
 
 COPY . .
 
@@ -12,7 +14,8 @@ WORKDIR /tmp/go-migrate
 ARG VERSION="4.15.2"
 
 RUN set -x \
-    && apk add --no-cache git \
+    && apt-get openssl \
+    && apt-get install -y git \
     && git clone --branch "v${VERSION}" --depth 1 --single-branch https://github.com/golang-migrate/migrate /tmp/go-migrate
 
 RUN set -x \
