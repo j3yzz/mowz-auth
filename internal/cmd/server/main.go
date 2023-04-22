@@ -7,6 +7,7 @@ import (
 	"github.com/j3yzz/mowz/internal/http/handler"
 	"github.com/j3yzz/mowz/internal/http/jwt"
 	"github.com/j3yzz/mowz/internal/store/user"
+	prom "github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
 	"log"
@@ -23,6 +24,9 @@ func main(cfg config.Config) {
 	}
 
 	app := echo.New()
+	p := prom.NewPrometheus("echo", nil)
+
+	p.Use(app)
 
 	handler.Health{}.Register(app.Group(""))
 
