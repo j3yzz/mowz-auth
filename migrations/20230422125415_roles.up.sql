@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS roles (
 INSERT IGNORE INTO roles(name) VALUES ('admin');
 INSERT IGNORE INTO roles(name) VALUES ('user');
 INSERT IGNORE INTO roles(name) VALUES ('support');
+INSERT IGNORE INTO roles(name) VALUES ('blocked');
