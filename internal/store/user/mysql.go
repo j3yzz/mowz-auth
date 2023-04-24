@@ -21,9 +21,8 @@ func NewMysqlUser(db *gorm.DB) *MysqlUser {
 
 const Table = "users"
 
-func (u *MysqlUser) Set(user model.User) error {
-	uc := u.DB.Create(user)
-
+func (u *MysqlUser) Set(user *model.UserWithId) error {
+	uc := u.DB.Table(Table).Omit("id").Create(&user)
 	return uc.Error
 }
 

@@ -8,7 +8,7 @@ type User struct {
 
 type UserWithId struct {
 	User
-	Id int `json:"id"`
+	Id int `json:"id" gorm:"primary_key"`
 }
 
 type UserWithRole struct {

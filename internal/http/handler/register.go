@@ -32,13 +32,15 @@ func (r Register) Handle(c echo.Context) error {
 	if err != nil {
 		panic(err)
 	}
-	u := model.User{
-		Name:     rq.Name,
-		Email:    rq.Email,
-		Password: string(hashedPassword),
+	u := model.UserWithId{
+		User: model.User{
+			Name:     rq.Name,
+			Email:    rq.Email,
+			Password: string(hashedPassword),
+		},
 	}
 
-	if err := r.Store.Set(u); err != nil {
+	if err := r.Store.Set(&u); err != nil {
 		if errors.As(err, &mysqlErr) && mysqlErr.Number == uint16(user.ErrEmailDuplicateCode) {
 			return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("email %s already exists", u.Email))
 		}
