@@ -7,13 +7,15 @@ import (
 	"github.com/j3yzz/mowz/internal/http/request"
 	"github.com/j3yzz/mowz/internal/model"
 	"github.com/j3yzz/mowz/internal/store/user"
+	"github.com/j3yzz/mowz/internal/store/user_role"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
 type Register struct {
-	Store user.User
+	Store     user.User
+	RoleStore user_role.UserRole
 }
 
 func (r Register) Handle(c echo.Context) error {
@@ -47,6 +49,8 @@ func (r Register) Handle(c echo.Context) error {
 
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
+
+	r.RoleStore.Set(u, "user")
 
 	return c.JSON(http.StatusCreated, map[string]interface{}{
 		"success": true,
