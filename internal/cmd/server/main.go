@@ -47,7 +47,7 @@ func main(cfg config.Config) {
 		JWT:   jh,
 	}.Register(api)
 
-	authApi := app.Group("api/v1", jh.Middleware(), middlewares.CheckUserHasRoleMiddleware(user.NewMysqlUser(database)))
+	authApi := app.Group("api/v1", jh.Middleware(), middlewares.CheckUserHasRoleMiddleware())
 
 	handler.Profile{
 		Store: user.NewMysqlUser(database),

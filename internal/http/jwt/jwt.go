@@ -33,6 +33,13 @@ func (j JWT) Middleware() echo.MiddlewareFunc {
 			tokenString := c.Request().Header.Get("Authorization")
 			tokenString = strings.Replace(tokenString, "Bearer ", "", -1)
 			userWithToken, _ := j.RetrieveByToken(tokenString, c)
+			if userWithToken.Role == "blocked" {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"success": false,
+					"message": "user_is_blocked",
+				})
+			}
+
 			ctx := context.WithValue(c.Request().Context(), "user", userWithToken)
 			c.SetRequest(c.Request().WithContext(ctx))
 			return next(c)
@@ -40,7 +47,7 @@ func (j JWT) Middleware() echo.MiddlewareFunc {
 	}
 }
 
-func (j JWT) RetrieveByToken(signedToken string, c echo.Context) (*model.UserWithId, error) {
+func (j JWT) RetrieveByToken(signedToken string, c echo.Context) (*model.UserWithRole, error) {
 	id, err := j.ValidateToken(signedToken)
 	if err != nil {
 		return nil, c.JSON(http.StatusUnauthorized, map[string]interface{}{
@@ -49,7 +56,7 @@ func (j JWT) RetrieveByToken(signedToken string, c echo.Context) (*model.UserWit
 		})
 	}
 
-	user, err := j.UserStore.FindById(id)
+	user, err := j.UserStore.FindUserWithRole(id)
 	if err != nil {
 		return nil, c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"success": false,

@@ -14,7 +14,7 @@ type Profile struct {
 }
 
 func (p Profile) Handle(c echo.Context) error {
-	currentUser := c.Request().Context().Value("user").(*model.UserWithId)
+	currentUser := c.Request().Context().Value("user").(*model.UserWithRole)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
