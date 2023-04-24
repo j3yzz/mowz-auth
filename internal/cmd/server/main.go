@@ -8,6 +8,7 @@ import (
 	"github.com/j3yzz/mowz/internal/http/jwt"
 	"github.com/j3yzz/mowz/internal/http/middlewares"
 	"github.com/j3yzz/mowz/internal/store/user"
+	"github.com/j3yzz/mowz/internal/store/user_role"
 	prom "github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
@@ -34,7 +35,8 @@ func main(cfg config.Config) {
 	api := app.Group("/api/v1")
 
 	handler.Register{
-		Store: user.NewMysqlUser(database),
+		Store:     user.NewMysqlUser(database),
+		RoleStore: user_role.NewMysqlUserRole(database),
 	}.Register(api)
 
 	jh := jwt.JWT{
