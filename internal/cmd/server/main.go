@@ -6,6 +6,7 @@ import (
 	"github.com/j3yzz/mowz/internal/db"
 	"github.com/j3yzz/mowz/internal/http/handler"
 	"github.com/j3yzz/mowz/internal/http/jwt"
+	"github.com/j3yzz/mowz/internal/http/middlewares"
 	"github.com/j3yzz/mowz/internal/store/user"
 	prom "github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
@@ -46,7 +47,7 @@ func main(cfg config.Config) {
 		JWT:   jh,
 	}.Register(api)
 
-	authApi := app.Group("api/v1", jh.Middleware())
+	authApi := app.Group("api/v1", jh.Middleware(), middlewares.CheckUserHasRoleMiddleware())
 
 	handler.Profile{
 		Store: user.NewMysqlUser(database),

@@ -10,3 +10,8 @@ type UserWithId struct {
 	User
 	Id int `json:"id"`
 }
+
+type UserWithRole struct {
+	UserWithId
+	Role string `json:"role"`
+}

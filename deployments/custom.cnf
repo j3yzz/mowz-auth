@@ -1,5 +1,7 @@
 [mysqld]
 character-set-server=utf8mb4
+skip_ssl
+# disable_ssl
 
 [client]
 default-character-set=utf8mb4

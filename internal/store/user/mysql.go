@@ -39,3 +39,13 @@ func (u *MysqlUser) FindById(id string) (model.UserWithId, error) {
 	query := u.DB.Table(Table).Find(&user, "id = ?", id)
 	return user, query.Error
 }
+
+func (u *MysqlUser) FindUserWithRole(id string) (model.UserWithRole, error) {
+	var user model.UserWithRole
+	query := u.DB.Raw("select users.id, users.email, users.password, users.name, r.name as role from users "+
+		"inner join user_roles ur on users.id = ur.user_id "+
+		"inner join roles r on r.id = ur.role_id "+
+		"where users.id = ?", id).First(&user)
+
+	return user, query.Error
+}
